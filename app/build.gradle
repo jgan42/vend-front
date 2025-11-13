@@ -5,6 +5,8 @@ plugins {
 android {
     compileSdk 32
 
+    namespace "cc.uling.usdk.demo"
+
     defaultConfig {
         applicationId "cc.uling.usdk.demo"
         minSdk 18
