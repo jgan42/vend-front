@@ -5,6 +5,17 @@ plugins {
 android {
     compileSdk 32
 
+    namespace "cc.uling.usdk.demo"
+
+    signingConfigs {
+        release {
+            storeFile file("./release-key.jks")
+            storePassword "uling-2025"
+            keyAlias "release"
+            keyPassword "uling-2025"
+        }
+    }
+
     defaultConfig {
         applicationId "cc.uling.usdk.demo"
         minSdk 18
@@ -23,6 +34,7 @@ android {
 
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
