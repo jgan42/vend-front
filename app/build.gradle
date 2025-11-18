@@ -2,8 +2,30 @@ plugins {
     id 'com.android.application'
 }
 
+def propertyOrEnv(String key, String fallback) {
+    return (project.findProperty(key) ?: System.getenv(key)) ?: fallback
+}
+
 android {
     compileSdk 32
+
+    namespace "cc.uling.usdk.demo"
+
+    signingConfigs {
+        release {
+            def keystorePath = propertyOrEnv("RELEASE_STORE_FILE", "../release-key.jks")
+            def keystoreFile = file(keystorePath)
+
+            if (!keystoreFile.exists()) {
+                throw new GradleException("Release keystore not found at ${keystoreFile}. Set RELEASE_STORE_FILE to a valid path.")
+            }
+
+            storeFile keystoreFile
+            storePassword propertyOrEnv("RELEASE_STORE_PASSWORD", "uling-2025")
+            keyAlias propertyOrEnv("RELEASE_KEY_ALIAS", "release")
+            keyPassword propertyOrEnv("RELEASE_KEY_PASSWORD", "uling-2025")
+        }
+    }
 
     defaultConfig {
         applicationId "cc.uling.usdk.demo"
@@ -23,6 +45,7 @@ android {
 
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
